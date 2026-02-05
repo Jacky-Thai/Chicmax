@@ -5,7 +5,9 @@
   <link rel="icon" href="./Image/favicon2.webp" type="image/png">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About Me</title>
+  <title>Personal Projects</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-GRX5ZPXBD5"></script>
@@ -18,6 +20,7 @@
 </script>
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://player.vimeo.com/api/player.js"></script>
   <style>
     html {
       scroll-behavior: smooth;
@@ -31,83 +34,1913 @@
       font-family: sans-serif;
     }
 
-    #openSidebar {
-      transition: opacity 0.3s ease;
+    .card {
+      border-radius: 1rem;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .card img {
+      transition: filter 0.3s ease;
+    }
+
+    .card:hover img {
+      filter: grayscale(100%);
+    }
+
+    .lightbox, .gallery-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.95);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+
+    .lightbox.active,
+    .gallery-modal.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .lightbox img, .gallery-modal img {
+      max-width: 100%;
+      border-radius: 1rem;
     }
 
     #openSidebar {
+  transition: opacity 0.3s ease;
+}
+
+.gallery-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.95);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  overflow-y: auto;
+}
+
+.gallery-modal.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Container ảnh */
+.gallery-modal .content-scroll {
+  max-height: 90vh;
+  max-width: 70vw;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+}
+.gallery-modal .content-scroll::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.gallery-modal img {
+  max-width: 100%;
+  border-radius: 1rem;
+}
+
+#openSidebar {
   pointer-events: auto;
   position: relative;
   z-index: 9999;
 }
 
-/* Ẩn scrollbar trên tất cả trình duyệt & thiết bị */
+.gallery-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.95);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  overflow: auto;
+  .lightbox {
+  padding-top: 60px; /* chừa chỗ cho mobile bar */
+}
+}
 
-/* Chrome, Safari, Edge (desktop + mobile) */
-::-webkit-scrollbar {
+.gallery-modal.active {
+  display: flex;
+  flex-direction: column;
+}
+
+.gallery-modal .scroll-x {
+  overflow-x: auto;
+  -ms-overflow-style: none;  /* IE + Edge */
+  scrollbar-width: none;     /* Firefox */
+  user-select: none; /* Ngăn chọn chữ */
+}
+.gallery-modal .scroll-x::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari */
+}
+
+.scroll-x {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.scroll-x::-webkit-scrollbar {
   display: none;
 }
 
-/* Firefox */
-html, body {
-  scrollbar-width: none;        /* Firefox */
-  -ms-overflow-style: none;     /* IE 10+ */
+.cursor-grab {
+  cursor: grab;
 }
 
-/* iOS Safari scroll container (trường hợp hiếm) */
-body {
-  -webkit-overflow-scrolling: touch;
-  overflow: -moz-scrollbars-none;
+.cursor-grabbing {
+  cursor: grabbing;
 }
 
-@keyframes scroll-loop {
-  0% {
-    transform: translateX(0%);
+.gallery-modal,
+.lightbox {
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 767px) {
+  .lightbox {
+    overflow-y: auto; /* scroll dọc cho mobile */
+    padding-top: 16px; /* chừa chỗ trên mobile */
   }
-  100% {
-    transform: translateX(-50%);
+
+  #lightbox-images {
+    display: flex;
+    flex-direction: column; /* xếp ảnh dọc */
+    gap: 1rem;
+    max-width: 100%;
+    overflow: visible; /* scroll dùng lightbox, không riêng div */
+  }
+
+  /* Nút close nổi trên ảnh, không che ảnh */
+  .lightbox button {
+    position: sticky;
+    top: 16px;   /* cách trên 16px, khớp padding lightbox */
+    left: 16px;  /* căn trái 16px */
+    z-index: 999;
+    background: none;  /* không nền */
+    color: white;
+    font-size: 2rem;
   }
 }
 
-.animate-scroll-loop {
-  animation: scroll-loop 20s linear infinite;
-  will-change: transform;
+@media (max-width: 767px) {
+  #lightbox-images > div:not(:first-child) {
+    padding-bottom: 3rem; /* hoặc giá trị bạn muốn */
+  }
 }
 
-.hover-glow {
-  transition: transform 0.2s ease, filter 0.2s ease;
+/* Dot thường */
+.swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.3);
+  opacity: 1;
 }
-.hover-glow:hover {
-  transform: scale(1.15);
-  filter: drop-shadow(0 0 6px #ffffffcc); /* Glow trắng */
+
+/* Dot đang active (chấm xanh → trắng) */
+.swiper-pagination-bullet-active {
+  background: #ffffff;
+}
+
+/* Fix gap giữa slide trên mobile */
+@media (max-width: 768px) {
+  .swiper-slide {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+
+/* ===============================
+   SWIPER NAV – ICON ONLY (NO BG)
+================================ */
+
+#card6-gallery .swiper-button-prev,
+#card6-gallery .swiper-button-next {
+  width: 40px;
+  height: 40px;
+
+  background: transparent;   /* ❌ bỏ nền đen */
+  border-radius: 0;          /* ❌ bỏ bo tròn */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+/* Ẩn icon mặc định của Swiper */
+#card6-gallery .swiper-button-prev::after,
+#card6-gallery .swiper-button-next::after {
+  display: none;
+}
+
+/* Mũi tên custom – nét dày */
+#card6-gallery .swiper-button-prev::before,
+#card6-gallery .swiper-button-next::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+
+  border-top: 3px solid #fff;
+  border-right: 3px solid #fff;
+}
+
+/* Hướng mũi tên */
+#card6-gallery .swiper-button-prev::before {
+  transform: rotate(-135deg);
+}
+
+#card6-gallery .swiper-button-next::before {
+  transform: rotate(45deg);
+}
+
+/* Hover */
+#card6-gallery .swiper-button-prev:hover,
+#card6-gallery .swiper-button-next:hover {
+  opacity: 1;
 }
 
   </style>
 </head>
-<body class="flex flex-col md:flex-row">
 
-<!-- SIDEBAR -->
-<aside id="sidebar"
-  class="bg-[#111] text-white w-48 p-6 fixed top-0 left-0 z-50 h-full md:h-screen md:sticky md:flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out hidden">
-  <div class="text-2xl font-bold mb-10 flex justify-between items-center">
-    My Portfolio
-    <button id="closeSidebar" class="md:hidden text-2xl">&times;</button>
+
+<body class="flex flex-col md:flex-row bg-[#111] text-white min-h-screen">
+
+  <!-- SIDEBAR (Desktop + Mobile Slide) -->
+  <aside id="sidebar"
+    class="bg-[#111] text-white w-48 p-6 fixed top-0 left-0 z-50 h-full md:h-screen md:sticky md:flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out hidden">
+    <div class="text-2xl font-bold mb-10 flex justify-between items-center">
+      My Portfolio
+      <button id="closeSidebar" class="md:hidden text-2xl">&times;</button>
+    </div>
+    <nav class="space-y-4 font-semibold">
+      <a href="index.html" class="block hover:text-gray-500">About Me</a>
+      <a href="personal.html" class="block hover:text-gray-500">Personal Project</a>
+      <a href="freelance.html" class="block hover:text-gray-500">Freelance Project</a>
+      <a href="mapping.html" class="block hover:text-gray-500">Indoor Mapping</a>
+      <a href="chicmax.html" class="block hover:text-gray-500 whitespace-nowrap">Chicmax</a>
+    </nav>
+  </aside>
+
+  <!-- MOBILE HAMBURGER -->
+  <div id="hamburgerBar" class="md:hidden fixed top-0 left-0 w-full bg-[#111] z-[9999] px-4 py-3">
+    <button id="openSidebar" class="text-white text-3xl z-[9999] relative">
+      <img src="./Image/menu-icon.webp" alt="Menu" class="w-8 h-8 object-contain">
+    </button>
   </div>
-  <nav class="space-y-4 font-semibold">
-    <a href="index.html" class="block hover:text-gray-500 whitespace-nowrap">About Me</a>
-    <a href="personal.html" class="block hover:text-gray-500 whitespace-nowrap">Personal Project</a>
-    <a href="freelance.html" class="block hover:text-gray-500 whitespace-nowrap">Freelance Project</a>
-    <a href="mapping.html" class="block hover:text-gray-500 whitespace-nowrap">Indoor Mapping</a>
-    <a href="chicmax.html" class="block hover:text-gray-500 whitespace-nowrap">Chicmax</a>
-  </nav>
-</aside>
 
-<!-- MOBILE HAMBURGER (Sửa lại dùng fixed + z-index cao) -->
-<div class="md:hidden fixed top-0 left-0 w-full bg-[#111] z-[9999] px-4 py-3">
-  <button id="openSidebar" class="text-white text-3xl z-[9999] relative">
-    <img src="./Image/menu-icon.webp" alt="Menu" class="w-8 h-8 object-contain">
-  </button>
+  <!-- BACKDROP (Mobile) -->
+  <div id="backdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40 md:hidden" onclick="closeMobileSidebar()"></div>
+
+<!-- WRAPPER -->
+<div id="content-wrapper" 
+     class="flex-1 w-full flex flex-col transition-all duration-300 relative z-10 pt-16 md:pt-0">
+
+
+<!-- LOGO + CATEGORY -->
+<div class="w-full flex flex-col items-center z-20 relative"> <!-- thêm z-20 và relative -->
+  <!-- Logo -->
+  <section 
+      id="logo-section" 
+      class="max-w-[calc(100%-12rem)] w-full flex justify-center py-2 mt-5 mx-auto
+             transition-all duration-300"
+  >
+    <img 
+      src="./Image/Logo.png" 
+      alt="KANS Logo"
+      class="object-contain w-24 sm:w-28 md:w-32 lg:w-36 xl:w-30 transition-all duration-300"
+    >
+  </section>
+
+  <!-- Category -->
+  <section 
+      id="category-section" 
+      class="sticky top-0 z-40 max-w-[calc(100%-12rem)] w-full flex flex-wrap justify-center gap-x-10 px-6 sm:px-12 md:px-24 lg:px-20 xl:px-60 mx-auto"
+  >
+    <!-- Button category -->
+  </section>
 </div>
 
-<!-- BACKDROP -->
-<div id="backdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40 md:hidden" onclick="closeMobileSidebar()"></div>
+    <!-- ROW 2: CATEGORY FILTER -->
+    <section id="categories-section" class="w-full flex flex-wrap justify-center gap-x-7 gap-y-2 px-6 sm:px-12 md:px-5 lg:px-10 xl:px-60 py-4">
+      <button class="category-btn group relative px-6 py-2 font-sans font-bold text-lg transition-colors" data-category="All" data-active="true">
+        All
+        <span class="underline-bar absolute bottom-0 left-1/2 -translate-x-1/2 w-[50%] h-[2px] bg-white transition-all duration-300"></span>
+      </button>
+      <button class="category-btn group relative px-6 py-2 font-sans font-bold text-lg hover:text-gray-400 transition-colors" data-category="Livestream">
+        Livestream
+        <span class="underline-bar absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-[50%]"></span>
+      </button>
+      <button class="category-btn group relative px-6 py-2 font-sans font-bold text-lg hover:text-gray-400 transition-colors" data-category="Campaign">
+        Campaign
+        <span class="underline-bar absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-[50%]"></span>
+      </button>
+      <button class="category-btn group relative px-6 py-2 font-sans font-bold text-lg hover:text-gray-400 transition-colors" data-category="PDP">
+        PDP
+        <span class="underline-bar absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-[50%]"></span>
+      </button>
+      <button class="category-btn group relative px-6 py-2 font-sans font-bold text-lg hover:text-gray-400 transition-colors" data-category="Internal Event">
+        Internal Event
+        <span class="underline-bar absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-[50%]"></span>
+      </button>
+    </section>
+
+    <!-- MAIN CONTENT -->
+ <main id="main"
+        class="w-full px-4 py-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-12">
+
+<!-- CARD IMAGE 1 -->
+<div 
+  class="card relative group project-card" 
+  data-aos="fade-up"
+  data-aos-offset="200"
+  data-aos-delay="200"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="Internal Event"
+>
+
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-8-3">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Project Image -->
+  <img 
+    src="./Image/Internal Thumb 2.webp" 
+    alt="Project 1" 
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300" 
+    onload="handleImageLoaded(this, 'spinner-8-3')" 
+    onclick="openLightbox(['./Image/mat_truoc.webp','./Image/mat_sau.webp'])"
+    data-spinner="spinner-8-3"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    
+    <!-- Main text -->
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      Internal Event
+    </p>
+    
+    <!-- Rectangle nhỏ hơn + text nhỏ hơn -->
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">Printing Design</span>
+    </div>
+  </div>
+</div>
+
+<!-- CARD IMAGE 2 -->
+<div 
+  class="card relative group project-card" 
+  data-aos="fade-up"
+  data-aos-offset="200"
+  data-aos-delay="400"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="PDP"
+>
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-8-5">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Project Image -->
+  <img 
+    src="./Image/PDP Thumb.webp" 
+    alt="Ecom Project" 
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300" 
+    onload="handleImageLoaded(this, 'spinner-8-5')" 
+    onclick="openGalleryModal('ecom-gallery')"
+    data-spinner="spinner-8-5"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    
+    <!-- Main text -->
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      Ecom
+    </p>
+    
+    <!-- Rectangle nhỏ hơn + text nhỏ hơn -->
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">PDP Product</span>
+    </div>
+  
+  </div>
+</div>
+
+<!-- CARD IMAGE 3 -->
+<div 
+  class="card relative group project-card" 
+  data-aos="fade-up"
+  data-aos-offset="200"
+  data-aos-delay="600"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="Campaign"
+>
+
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-8-6">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Project Image -->
+  <img 
+    src="./Image/CP-T9-Thumb.webp" 
+    alt="Livestream Project" 
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300" 
+    onload="handleImageLoaded(this, 'spinner-8-6')" 
+    onclick="openGalleryModal('Campaign-T9-gallery')"
+    data-spinner="spinner-8-6"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      Campaign
+    </p>
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">September</span>
+    </div>
+  </div>
+</div>
+
+<!-- CARD IMAGE 4 -->
+<div 
+  class="card relative group project-card" 
+  data-aos="fade-up"
+  data-aos-offset="200"
+  data-aos-delay="800"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="Campaign"
+>
+
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-8-7">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Project Image -->
+  <img 
+    src="./Image/CP-T10-Thumb.webp"
+    alt="Campaign Project"
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300"
+    onload="handleImageLoaded(this, 'spinner-8-7')"
+    onclick="openGalleryModal('card4-gallery')"
+    data-spinner="spinner-8-7"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      Campaign
+    </p>
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">October</span>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- CARD IMAGE 5 -->
+<div 
+  class="card relative group project-card" 
+  data-aos="fade-up"
+  data-aos-offset="80"
+  data-aos-delay="800"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="Campaign"
+>
+
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-8-8">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Project Image -->
+  <img 
+    src="./Image/CP-T11-Thumb.webp"
+    alt="Campaign Project 5"
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300"
+    onload="handleImageLoaded(this, 'spinner-8-8')"
+    onclick="openGalleryModal('card5-gallery')"
+    data-spinner="spinner-8-8"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      Campaign
+    </p>
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">November</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- CARD IMAGE 6 -->
+<div 
+  class="card relative group project-card" 
+  data-aos="fade-up"
+  data-aos-offset="80"
+  data-aos-delay="900"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="Campaign"
+>
+
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-8-9">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Project Image -->
+  <img 
+    src="./Image/CP-T12-Thumb.webp"
+    alt="Campaign Project 5"
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300"
+    onload="handleImageLoaded(this, 'spinner-8-9')"
+    onclick="openGalleryModal('card6-gallery')"
+    data-spinner="spinner-8-9"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      Campaign
+    </p>
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">December</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- CARD IMAGE 7 -->
+<div 
+  class="card relative group project-card" 
+  data-aos="fade-up"
+  data-aos-offset="80"
+  data-aos-delay="600"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="Livestream"
+>
+
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-7">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Thumbnail Image -->
+  <img 
+    src="./Image/Thumb-Live-Trungthu.webp"
+    alt="Campaign Project 7"
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300 cursor-pointer"
+    onload="handleImageLoaded(this, 'spinner-7')"
+    onclick="openGalleryModal('card7-gallery')"
+    data-spinner="spinner-7"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      Livestream
+    </p>
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">Mid-Autumn Festival</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- CARD IMAGE 8 -->
+<div 
+  class="card relative group project-card" 
+  data-aos="fade-up"
+  data-aos-offset="80"
+  data-aos-delay="700"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="Livestream"
+>
+
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-8">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Thumbnail Image -->
+  <img 
+    src="./Image/Thumb-Live-Xmas-1.webp"
+    alt="Campaign Project 8"
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300 cursor-pointer"
+    onload="handleImageLoaded(this, 'spinner-8')"
+    onclick="openGalleryModal('card8-gallery')"
+    data-spinner="spinner-8"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      Livestream
+    </p>
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">Christmas</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- CARD IMAGE 9 -->
+<div 
+  class="card relative group project-card" 
+  data-aos="fade-up"
+  data-aos-offset="80"
+  data-aos-delay="900"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="Livestream"
+>
+
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-9">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Thumbnail Image -->
+  <img 
+    src="./Image/Thumb-Live-Xmas-2.webp"
+    alt="Campaign Project 9"
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300 cursor-pointer"
+    onload="handleImageLoaded(this, 'spinner-9')"
+    onclick="openGalleryModal('card9-gallery')"
+    data-spinner="spinner-9"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      Livestream
+    </p>
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">Christmas</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- CARD IMAGE 10 -->
+<div 
+  class="card relative group project-card" 
+  data-aos="fade-up"
+  data-aos-offset="80"
+  data-aos-delay="1100"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="Livestream"
+>
+
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-10">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Thumbnail Image -->
+  <img 
+    src="./Image/Thumb-Live-Xmas-3.webp"
+    alt="Campaign Project 10"
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300 cursor-pointer"
+    onload="handleImageLoaded(this, 'spinner-10')"
+    onclick="openGalleryModal('card10-gallery')"
+    data-spinner="spinner-10"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      Livestream
+    </p>
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">Christmas</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- CARD IMAGE 11 -->
+<div 
+  class="card relative group project-card" 
+  data-aos="fade-up"
+  data-aos-offset="80"
+  data-aos-delay="600"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="Livestream"
+>
+
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-11">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Thumbnail Image -->
+  <img 
+    src="./Image/Thumb-Live-SBF.webp"
+    alt="Campaign Project 11"
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300 cursor-pointer"
+    onload="handleImageLoaded(this, 'spinner-11')"
+    onclick="openGalleryModal('card11-gallery')"
+    data-spinner="spinner-11"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      Livestream
+    </p>
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">Super Brand Festival</span>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+</body>
+
+ 
+
+<!-- LIGHTBOX -->
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox z-50">
+
+  <!-- CLOSE BUTTON -->
+<button onclick="closeLightbox()"
+  class="
+    fixed top-6 left-6 w-full h-12
+    flex items-center pl-4
+    bg-black text-white text-3xl font-bold
+    hover:text-gray-500 transition
+    z-[9999]
+
+    md:absolute md:top-4 md:left-4
+    md:w-auto md:h-auto md:bg-transparent md:text-4xl
+  ">
+  &times;
+</button>
+
+
+  <!-- CONTENT WRAPPER -->
+  <div class="flex-1 flex items-start justify-center pt-16 md:pt-16 px-4 pb-6">
+
+
+    <!-- Spinner -->
+    <div class="absolute inset-0 flex items-center justify-center bg-black z-20" id="lightbox-spinner">
+      <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center">
+        <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+      </div>
+    </div>
+
+    <!-- ✅ IMAGE CONTAINER -->
+<div id="lightbox-images"
+     class="
+       content-scroll
+       flex flex-col md:flex-row gap-4
+       justify-start items-center w-full
+
+       h-[calc(100vh-64px)]
+       mt-16
+       overflow-y-auto
+
+       md:h-auto md:mt-0 md:overflow-visible
+     ">
+
+          <!-- images sẽ được JS thêm vào đây -->
+
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY MODAL FOR ECOM PROJECT -->
+<div id="ecom-gallery" class="gallery-modal">
+  <!-- CLOSE BUTTON GALLERY -->
+<button onclick="closeGalleryModal('ecom-gallery')"
+  class="
+    fixed top-6 left-6 w-full h-12
+    flex items-center pl-4
+    bg-black text-white text-3xl font-bold
+    hover:text-gray-500 transition
+    z-[9999]
+
+    md:absolute md:top-4 md:left-4
+    md:w-auto md:h-auto md:bg-transparent md:text-4xl
+  ">
+  &times;
+</button>
+
+<div class="content-scroll grid grid-cols-1 md:grid-cols-2 gap-6 px-4 py-6 pt-14 overflow-y-auto max-h-[80vh] md:pt-4">
+  <img src="./Image/TONER_1.webp" alt="Ecom 1"
+    class="w-full max-w-none md:max-w-[520px] rounded-xl object-cover">
+
+  <img src="./Image/TONER_2.webp" alt="Ecom 2"
+    class="w-full max-w-none md:max-w-[520px] rounded-xl object-cover">
+
+  <img src="./Image/TONER_3.webp" alt="Ecom 3"
+    class="w-full max-w-none md:max-w-[520px] rounded-xl object-cover">
+
+  <img src="./Image/TONER_4.webp" alt="Ecom 4"
+    class="w-full max-w-none md:max-w-[520px] rounded-xl object-cover">
+
+  <img src="./Image/TONER_5.webp" alt="Ecom 5"
+    class="w-full max-w-none md:max-w-[520px] rounded-xl object-cover">
+
+  <img src="./Image/TONER_6.webp" alt="Ecom 6"
+    class="w-full max-w-none md:max-w-[520px] rounded-xl object-cover">
+
+  <img src="./Image/LOTION_2.webp" alt="Ecom 8"
+    class="w-full max-w-none md:max-w-[520px] rounded-xl object-cover">
+
+  <img src="./Image/LOTION_3.webp" alt="Ecom 9"
+    class="w-full max-w-none md:max-w-[520px] rounded-xl object-cover">
+</div>
+
+</div>
+
+<!-- GALLERY MODAL - Campagin T9 -->
+<div id="Campaign-T9-gallery"
+     class="gallery-modal">
+
+  <!-- CLOSE BUTTON -->
+<button
+  onclick="closeGalleryModal('Campaign-T9-gallery')"
+  class="
+    sticky top-0 left-0
+    w-full h-14
+    flex items-center pl-4
+    bg-black
+    text-white text-3xl font-bold
+    hover:text-gray-400 transition
+    z-[50]
+
+    md:absolute md:top-4 md:left-4
+    md:w-auto md:h-auto
+    md:bg-transparent md:text-4xl
+  "
+>
+  &times;
+</button>
+
+  <!-- GALLERY WRAPPER -->
+  <div
+    class="
+      scroll-x
+      w-full h-full
+      flex flex-col md:flex-row
+      gap-6
+      px-6 pt-5 pb-10 md:py-20
+      overflow-y-auto
+      md:overflow-x-auto md:overflow-y-hidden
+    "
+  >
+
+    <img src="./Image/Banner Livestream.webp"
+         class="w-full md:w-auto md:h-full object-contain rounded-xl" />
+
+    <img src="./Image/Hannah.webp"
+         class="w-full md:w-auto md:h-full object-contain rounded-xl" />
+
+    <img src="./Image/BANNER CPAS.webp"
+         class="w-full md:w-auto md:h-full object-contain rounded-xl" />
+  </div>
+</div>
+
+
+<!-- CARD 4 GALLERY -->
+<div id="card4-gallery" class="gallery-modal">
+
+<!-- CLOSE BUTTON (STICKY HEADER) -->
+<button
+  onclick="closeGalleryModal('card4-gallery')"
+  class="
+    sticky top-0 left-0
+    w-full h-14
+    flex items-center pl-4
+    bg-black
+    text-white text-3xl font-bold
+    hover:text-gray-400 transition
+    z-[50]
+
+    md:absolute md:top-4 md:left-4
+    md:w-auto md:h-auto
+    md:bg-transparent md:text-4xl
+  "
+>
+  &times;
+</button>
+
+  <!-- CONTENT -->
+  <div
+class="
+  scroll-x
+  w-full h-full
+  flex flex-col md:flex-row
+  gap-6
+  px-6 md:px-12 lg:px-24
+  pt-5 pb-10 md:py-20
+
+  overflow-y-auto
+  md:overflow-x-auto md:overflow-y-hidden
+
+  cursor-grab
+
+  md:items-center        /* chỉ center trục dọc */
+"
+  >
+
+    <!-- ITEM 1 -->
+    <img
+      src="./Image/BANNER LIVESTREAM-T10.webp"
+      class="w-full md:w-auto md:h-full object-contain rounded-xl" />
+
+    <!-- ITEM 2 -->
+    <img
+      src="./Image/Airpod.webp"
+      class="w-full md:w-auto md:h-full object-contain rounded-xl" />
+  </div>
+</div>
+
+<!-- CARD 5 GALLERY -->
+<div id="card5-gallery" class="gallery-modal">
+
+  <!-- CLOSE BUTTON (STICKY HEADER) -->
+  <button
+    onclick="closeGalleryModal('card5-gallery')"
+    class="
+      sticky top-0 left-0
+      w-full h-14
+      flex items-center pl-4
+      bg-black
+      text-white text-3xl font-bold
+      hover:text-gray-400 transition
+      z-[50]
+
+      md:absolute md:top-4 md:left-4
+      md:w-auto md:h-auto
+      md:bg-transparent md:text-4xl
+    "
+  >
+    &times;
+  </button>
+
+  <!-- CONTENT -->
+  <div
+class="
+  scroll-x
+  w-full h-full
+  flex flex-col md:flex-row
+  gap-6
+  px-6 md:px-12 lg:px-24
+  pt-5 pb-10 md:py-20
+
+  overflow-y-auto
+  md:overflow-x-auto md:overflow-y-hidden
+
+  cursor-grab
+
+  md:items-center        /* chỉ center trục dọc */
+"
+  >
+
+    <!-- ITEM 1 -->
+    <img
+      src="./Image/Black-Friday-1.webp"
+      class="w-full md:w-auto md:h-full object-contain rounded-xl" />
+
+    <!-- ITEM 2 -->
+    <img
+      src="./Image/Black-Friday-2.webp"
+      class="w-full md:w-auto md:h-full object-contain rounded-xl" />
+
+  </div>
+</div>
+
+
+<!-- CARD 6 GALLERY -->
+<div id="card6-gallery" class="gallery-modal hidden fixed inset-0 bg-black z-[9999] flex items-center justify-center">
+
+  <!-- CLOSE -->
+<button
+  onclick="closeGalleryModal('card6-gallery')"
+  class="
+    fixed top-6 left-6 w-full h-12
+    flex items-center pl-4
+    bg-black text-white text-3xl font-bold
+    hover:text-gray-500 transition
+    z-[9999]
+
+    md:absolute md:top-4 md:left-4
+    md:w-auto md:h-auto
+    md:bg-transparent md:text-4xl
+  "
+>
+  &times;
+</button>
+
+  <!-- SWIPER -->
+  <div class="swiper w-screen h-screen">
+    <div class="swiper-wrapper">
+
+      <div class="swiper-slide flex items-center justify-center p-20 md:p-20">
+        <img src="./Image/KV-T12.webp" class="max-h-full rounded-xl object-contain" />
+      </div>
+
+      <div class="swiper-slide flex items-center justify-center p-20 md:p-20">
+        <img src="./Image/CPAS-1.webp" class="max-h-full rounded-xl object-contain" />
+      </div>
+
+      <div class="swiper-slide flex items-center justify-center p-20 md:p-20">
+        <img src="./Image/CPAS-2.webp" class="max-h-full rounded-xl object-contain" />
+      </div>
+
+      <div class="swiper-slide flex items-center justify-center p-20 md:p-20">
+        <img src="./Image/CPAS-3.webp" class="max-h-full rounded-xl object-contain" />
+      </div>
+
+      <div class="swiper-slide flex items-center justify-center p-20 md:p-20">
+        <img src="./Image/CPAS-4.webp" class="max-h-full rounded-xl object-contain" />
+      </div>
+
+      <div class="swiper-slide flex items-center justify-center p-20 md:p-20">
+        <img src="./Image/APP-T12.webp" class="max-h-full rounded-xl object-contain" />
+      </div>
+
+      <div class="swiper-slide flex items-center justify-center p-20 md:p-20">
+        <img src="./Image/PC-T12.webp" class="max-h-full rounded-xl object-contain" />
+      </div>
+
+    </div>
+
+    <!-- NAV -->
+    <div class="swiper-button-next text-white"></div>
+    <div class="swiper-button-prev text-white"></div>
+    <div class="swiper-pagination"></div>
+  </div>
+
+</div>
+
+<!-- CARD 7 GALLERY (VIDEO) -->
+<div
+  id="card7-gallery"
+  class="gallery-modal fixed inset-0 bg-black z-[9999] hidden flex flex-col"
+>
+  <!-- CLOSE -->
+  <button
+    onclick="closeGalleryModal('card7-gallery')"
+    class="sticky top-0 left-0 w-full h-14 flex items-center pl-4
+           bg-black text-white text-3xl font-bold z-50
+           md:absolute md:top-4 md:left-4 md:w-auto md:h-auto md:bg-transparent"
+  >
+    &times;
+  </button>
+
+  <!-- VIDEO -->
+  <div class="flex-1 flex items-center justify-center px-4 pt-6">
+    <div
+      class="relative w-[95vw] max-w-[1200px] aspect-video max-h-[85vh]
+             rounded-xl overflow-hidden"
+    >
+      <iframe
+        id="card7-video"
+        class="absolute inset-0 w-full h-full"
+        src=""
+        frameborder="0"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 8 GALLERY (VIDEO) -->
+<div
+  id="card8-gallery"
+  class="gallery-modal fixed inset-0 bg-black z-[9999] hidden flex flex-col"
+>
+  <!-- CLOSE -->
+  <button
+    onclick="closeGalleryModal('card8-gallery')"
+    class="sticky top-0 left-0 w-full h-14 flex items-center pl-4
+           bg-black text-white text-3xl font-bold z-50
+           md:absolute md:top-4 md:left-4 md:w-auto md:h-auto md:bg-transparent"
+  >
+    &times;
+  </button>
+
+  <!-- VIDEO -->
+  <div class="flex-1 flex items-center justify-center px-4 pt-6">
+    <div
+      class="relative w-[95vw] max-w-[1200px] aspect-video max-h-[85vh]
+             rounded-xl overflow-hidden"
+    >
+      <iframe
+        id="card8-video"
+        class="absolute inset-0 w-full h-full"
+        src=""
+        frameborder="0"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- CARD 9 GALLERY (VIDEO) -->
+<div
+  id="card9-gallery"
+  class="gallery-modal fixed inset-0 bg-black z-[9999] hidden flex flex-col"
+>
+  <!-- CLOSE -->
+  <button
+    onclick="closeGalleryModal('card9-gallery')"
+    class="sticky top-0 left-0 w-full h-14 flex items-center pl-4
+           bg-black text-white text-3xl font-bold z-50
+           md:absolute md:top-4 md:left-4 md:w-auto md:h-auto md:bg-transparent"
+  >
+    &times;
+  </button>
+
+  <!-- VIDEO -->
+  <div class="flex-1 flex items-center justify-center px-4 pt-6">
+    <div
+      class="relative w-[95vw] max-w-[1200px] aspect-video max-h-[85vh]
+             rounded-xl overflow-hidden"
+    >
+      <iframe
+        id="card9-video"
+        class="absolute inset-0 w-full h-full"
+        src=""
+        frameborder="0"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+</div>
+
+
+<!-- CARD 10 GALLERY (VIDEO) -->
+<div
+  id="card10-gallery"
+  class="gallery-modal fixed inset-0 bg-black z-[9999] hidden flex flex-col"
+>
+  <!-- CLOSE -->
+  <button
+    onclick="closeGalleryModal('card10-gallery')"
+    class="sticky top-0 left-0 w-full h-14 flex items-center pl-4
+           bg-black text-white text-3xl font-bold z-50
+           md:absolute md:top-4 md:left-4 md:w-auto md:h-auto md:bg-transparent"
+  >
+    &times;
+  </button>
+
+  <!-- VIDEO -->
+  <div class="flex-1 flex items-center justify-center px-4 pt-6">
+    <div
+      class="relative w-[95vw] max-w-[1200px] aspect-video max-h-[85vh]
+             rounded-xl overflow-hidden"
+    >
+      <iframe
+        id="card10-video"
+        class="absolute inset-0 w-full h-full"
+        src=""
+        frameborder="0"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 11 GALLERY (VIDEO) -->
+<div
+  id="card11-gallery"
+  class="gallery-modal fixed inset-0 bg-black z-[9999] hidden flex flex-col"
+>
+  <!-- CLOSE -->
+  <button
+    onclick="closeGalleryModal('card11-gallery')"
+    class="sticky top-0 left-0 w-full h-14 flex items-center pl-4
+           bg-black text-white text-3xl font-bold z-50
+           md:absolute md:top-4 md:left-4 md:w-auto md:h-auto md:bg-transparent"
+  >
+    &times;
+  </button>
+
+  <!-- VIDEO -->
+  <div class="flex-1 flex items-center justify-center px-4 pt-6">
+    <div
+      class="relative w-[95vw] max-w-[1200px] aspect-video max-h-[85vh]
+             rounded-xl overflow-hidden"
+    >
+      <iframe
+        id="card11-video"
+        class="absolute inset-0 w-full h-full"
+        src=""
+        frameborder="0"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- JS -->
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const openSidebarBtn = document.getElementById('openSidebar');
+  const closeSidebarBtn = document.getElementById('closeSidebar');
+  const backdrop = document.getElementById('backdrop');
+
+// Mobile sidebar open
+openSidebarBtn.addEventListener('click', () => {
+  sidebar.classList.remove('hidden');
+  requestAnimationFrame(() => {
+    sidebar.classList.remove('-translate-x-full');
+  });
+  backdrop.classList.remove('hidden');
+  openSidebarBtn.classList.add('hidden');
+});
+
+  // Mobile sidebar close
+function closeMobileSidebar() {
+  sidebar.classList.add('-translate-x-full');
+  backdrop.classList.add('hidden');
+  openSidebarBtn.classList.remove('hidden'); // Hiện lại icon hamburger
+  setTimeout(() => sidebar.classList.add('hidden'), 300);
+}
+// Nếu resize lại từ mobile lên desktop thì hiện lại sidebar
+window.addEventListener('resize', () => {
+  if (window.innerWidth >= 768) {
+    sidebar.classList.remove('hidden', '-translate-x-full');
+  } else {
+    sidebar.classList.add('hidden', '-translate-x-full');
+  }
+});
+
+  closeSidebarBtn.addEventListener('click', closeMobileSidebar);
+
+function openLightbox(src) {
+  const lb = document.getElementById('lightbox')
+  const container = document.getElementById('lightbox-images')
+  const spinner = document.getElementById('lightbox-spinner')
+  const sidebar = document.getElementById('sidebar')
+  const hamburger = document.getElementById('hamburgerBar')
+
+  // Reset
+  container.innerHTML = ''
+  spinner.style.display = 'flex'
+
+  // ✅ Chỉ nhận tối đa 2 ảnh
+  if (Array.isArray(src)) {
+    images = src.slice(0, 2)
+  } else {
+    images = [src]
+  }
+
+  // Append ảnh vào lightbox
+  images.forEach((imgSrc) => {
+    // ✅ Wrapper để chừa padding cho tablet / mobile
+    const wrapper = document.createElement('div')
+    wrapper.className = "w-full flex justify-center px-3 sm:px-0"
+
+    const img = document.createElement('img')
+    img.src = imgSrc
+
+    // ✅ Mobile nhỏ hơn tí, tablet + desktop giữ như cũ
+ img.className = `
+  max-w-full
+  max-h-[calc(100vh-80px)]
+  md:max-h-[90vh]
+  rounded-xl shadow-lg object-contain
+  opacity-0 transition-opacity duration-300
+`
+
+
+    img.onload = function () {
+      img.classList.remove('opacity-0')
+      img.classList.add('opacity-100')
+      spinner.style.display = 'none'
+    }
+
+    wrapper.appendChild(img)
+    container.appendChild(wrapper)
+  })
+
+  lb.classList.add('active')
+
+  // Lock scroll
+  document.body.style.overflow = 'hidden'
+
+  // Ẩn hamburger
+  if (hamburger) hamburger.classList.add('hidden')
+
+  // Backup & ẩn sidebar (desktop)
+  if (window.innerWidth >= 768 && sidebar) {
+    sidebarDisplayBackup = sidebar.style.display
+    sidebar.style.display = 'none'
+    sidebar.style.opacity = '0'
+  }
+}
+
+
+function closeLightbox() {
+  const lb = document.getElementById('lightbox')
+  const container = document.getElementById('lightbox-images')
+
+  lb.classList.remove('active')
+  container.innerHTML = ''
+
+  document.body.style.overflow = ''
+
+  // Hiện lại hamburger
+  const hamburger = document.getElementById('hamburgerBar')
+  if (hamburger) hamburger.classList.remove('hidden')
+
+  // Hiện lại sidebar (desktop)
+  const sidebar = document.getElementById('sidebar')
+  if (window.innerWidth >= 768 && sidebar) {
+    sidebar.style.display = ''
+    sidebar.style.opacity = '1'
+  }
+}
+
+
+
+function closeGalleryModal(id) {
+  const modal = document.getElementById(id);
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+
+  // Hiện lại hamburger icon khi gallery đóng
+  const hamburger = document.getElementById('hamburgerBar');
+  if (hamburger) hamburger.classList.remove('hidden');
+}
+
+   // Thoát Lightbox và Gallery Modal khi bấm ESC
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      closeLightbox();
+      document.querySelectorAll('.gallery-modal.active').forEach(modal => {
+        modal.classList.remove('active');
+      });
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Đóng sidebar nếu người dùng scroll khi đang mở (chỉ trên mobile)
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const isMobile = window.innerWidth < 768;
+  const isSidebarVisible = !sidebar.classList.contains('hidden') && !sidebar.classList.contains('-translate-x-full');
+
+  if (isMobile && isSidebarVisible) {
+    const currentScroll = window.scrollY;
+
+    // Nếu người dùng scroll xuống dưới ít nhất 20px
+    if (Math.abs(currentScroll - lastScroll) > 20) {
+      closeMobileSidebar();
+    }
+
+    lastScroll = currentScroll;
+  }
+});
+
+window.addEventListener('scroll', () => {
+  const isMobile = window.innerWidth < 768;
+  const isSidebarVisible = !sidebar.classList.contains('hidden') && !sidebar.classList.contains('-translate-x-full');
+
+  if (isMobile && isSidebarVisible) {
+    closeMobileSidebar();
+  }
+});
+
+// Đóng sidebar nếu chạm/nhấp ra ngoài sidebar trên mobile
+document.addEventListener('click', function (e) {
+  const isMobile = window.innerWidth < 768;
+  const isSidebarOpen = !sidebar.classList.contains('hidden') && !sidebar.classList.contains('-translate-x-full');
+  
+  if (isMobile && isSidebarOpen && !sidebar.contains(e.target) && !openSidebarBtn.contains(e.target)) {
+    closeMobileSidebar();
+  }
+});
+
+document.addEventListener('touchstart', function (e) {
+  const isMobile = window.innerWidth < 768;
+  const isSidebarOpen = !sidebar.classList.contains('hidden') && !sidebar.classList.contains('-translate-x-full');
+  
+  if (isMobile && isSidebarOpen && !sidebar.contains(e.target) && !openSidebarBtn.contains(e.target)) {
+    closeMobileSidebar();
+  }
+});
+
+// Enable drag-scroll for horizontal gallery
+document.querySelectorAll('.scroll-x').forEach(container => {
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  // Bắt sự kiện đúng lớp scroll-x chứ không phải con
+  container.addEventListener('mousedown', (e) => {
+    e.preventDefault(); // ← Ngăn ảnh hoặc DOM con gây cản trở
+    isDown = true;
+    startX = e.pageX - container.offsetLeft;
+    scrollLeft = container.scrollLeft;
+    container.classList.add('cursor-grabbing');
+  }, { passive: false });
+
+  container.addEventListener('mouseleave', () => {
+    isDown = false;
+    container.classList.remove('cursor-grabbing');
+  });
+
+  container.addEventListener('mouseup', () => {
+    isDown = false;
+    container.classList.remove('cursor-grabbing');
+  });
+
+  container.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - container.offsetLeft;
+    const walk = (x - startX) * 1.5; // Điều chỉnh tốc độ
+    container.scrollLeft = scrollLeft - walk;
+  }, { passive: false });
+
+  // Đặt sẵn cursor để UX tốt
+  container.classList.add('cursor-grab');
+});
+
+
+
+
+function handleImageLoaded(img, spinnerId) {
+  img.classList.remove('opacity-0');
+  img.classList.add('opacity-100');
+
+  const spinner = document.getElementById(spinnerId);
+  if (spinner) {
+    spinner.style.display = 'none';
+  }
+}
+
+<!-- Cuộn về đầu trang khi reload -->
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+
+window.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("img[data-spinner]").forEach((img) => {
+    if (img.complete) {
+      const spinnerId = img.getAttribute("data-spinner");
+      handleImageLoaded(img, spinnerId);
+    }
+  });
+});
+
+  // Loading spinner trong modal/lightbox
+function handleLightboxImageLoaded() {
+  const img = document.getElementById('lightbox-img');
+  const spinner = document.getElementById('lightbox-spinner');
+  img.classList.remove('opacity-0');
+  img.classList.add('opacity-100');
+  if (spinner) spinner.style.display = 'none';
+}
+
+  // Chặn scroll ngoài modal khi modal đang active
+function preventScrollOutsideModal(e) {
+  const isLightboxOpen = document.getElementById('lightbox')?.classList.contains('active');
+  const isAnyModalOpen = document.querySelector('.gallery-modal.active');
+
+  // Nếu không mở lightbox hoặc modal → không làm gì
+  if (!isLightboxOpen && !isAnyModalOpen) return;
+
+  const scrollableInsideModal = e.target.closest('.content-scroll, .scroll-x');
+
+  // Nếu không phải vùng scroll bên trong modal → ngăn scroll
+  if (!scrollableInsideModal) {
+    e.preventDefault();
+  }
+}
+
+document.addEventListener('touchmove', preventScrollOutsideModal, { passive: false });
+
+</script>
+
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const iframe = document.getElementById("personal-vimeo-player");
+    const overlay = document.getElementById("personal-vimeo-overlay");
+    const player = new Vimeo.Player(iframe);
+
+    player.on('play', () => {
+      overlay.classList.add("hidden");
+    });
+
+    player.on('ended', () => {
+      console.log("Video ended!");
+      overlay.classList.remove("hidden");
+    });
+
+    window.replayVimeo = function () {
+      player.setCurrentTime(0).then(() => {
+        player.play();
+        overlay.classList.add("hidden");
+      });
+    };
+  });
+</script>
+
+</script>
+<!-- AOS JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init();
+</script>
+
+<script>
+  AOS.init({
+    once: true  // animation sẽ lặp lại mỗi lần phần tử vào viewport
+  });
+</script>
+
+
+<!-- Active Category -->
+<script>
+  const buttons = document.querySelectorAll(".category-btn");
+  const cards = document.querySelectorAll(".project-card");
+
+  function setActiveButton(btn) {
+    // Remove active từ tất cả
+    buttons.forEach(b => {
+      b.dataset.active = "false";
+      b.classList.remove("text-gray-300", "cursor-default");
+      b.classList.add("hover:text-gray-400");
+
+      const underline = b.querySelector(".underline-bar");
+      underline.style.width = "0";
+    });
+
+    // Set active nút được chọn
+    btn.dataset.active = "true";
+    btn.classList.add("text-gray-300", "cursor-default");
+    btn.classList.remove("hover:text-gray-400");
+
+    const underline = btn.querySelector(".underline-bar");
+    underline.style.width = "50%";
+  }
+
+  // CLICK EVENT - vừa set active vừa filter card
+buttons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    setActiveButton(btn);
+
+    const selectedCategory = btn.getAttribute("data-category");
+
+    cards.forEach(card => {
+      const cardCategory = card.getAttribute("data-category");
+
+      // 🔥 RESET trạng thái AOS
+      card.classList.remove("aos-animate");
+
+      if (selectedCategory === "All" || cardCategory === selectedCategory) {
+        card.classList.remove("hidden");
+      } else {
+        card.classList.add("hidden");
+      }
+    });
+
+    // 🔥 BẮT BUỘC: báo AOS re-calc lại
+    requestAnimationFrame(() => {
+      AOS.refreshHard();
+    });
+  });
+});
+
+
+  // HOVER EFFECT (chỉ với những cái không active)
+  buttons.forEach(btn => {
+    const underline = btn.querySelector(".underline-bar");
+
+    btn.addEventListener("mouseenter", () => {
+      if (btn.dataset.active === "false") {
+        underline.style.transition = "all 0.3s ease-out";
+        underline.style.width = "50%";
+      }
+    });
+
+    btn.addEventListener("mouseleave", () => {
+      if (btn.dataset.active === "false") {
+        underline.style.width = "0";
+      }
+    });
+  });
+
+  // Khi load trang, tự động active "All" và show tất cả card
+  window.addEventListener("DOMContentLoaded", () => {
+    const defaultBtn = document.querySelector('.category-btn[data-category="All"]');
+    if (defaultBtn) defaultBtn.click(); // dùng click để trigger filter luôn
+  });
+</script>
+
+<script>
+let sidebarDisplayBackup = ''
+
+// Cập nhật trạng thái hamburger theo gallery
+function updateHamburgerState() {
+  const hamburger = document.getElementById('hamburgerBar')
+  const activeGallery = document.querySelector('.gallery-modal.active')
+
+  if (!hamburger) return
+
+  // Nếu có gallery đang mở -> luôn ẩn hamburger
+  if (activeGallery) {
+    hamburger.classList.add('hidden')
+  } else {
+    hamburger.classList.remove('hidden')
+  }
+}
+
+// ===== YOUTUBE GALLERY VIDEO =====
+const galleryYouTubeMap = {
+  'card7-gallery': {
+    iframeId: 'card7-video',
+    src: 'https://www.youtube.com/embed/fIDWAhECmtI?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1'
+  },
+  'card8-gallery': {
+    iframeId: 'card8-video',
+    src: 'https://www.youtube.com/embed/8A7CW6BXsOo?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1'
+  },
+  'card9-gallery': {
+    iframeId: 'card9-video',
+    src: 'https://www.youtube.com/embed/v-Q-pDis2Lk?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1'
+  },
+  'card10-gallery': {
+    iframeId: 'card10-video',
+    src: 'https://www.youtube.com/embed/fbsRudB6kLs?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1'
+  },
+  'card11-gallery': {
+    iframeId: 'card11-video',
+    src: 'https://www.youtube.com/embed/CutBw7Y1OG4?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1'
+  }
+}
+
+
+
+
+// Open gallery modal
+function openGalleryModal(id) {
+  const modal = document.getElementById(id)
+  const scrollable = modal.querySelector('.content-scroll, .scroll-x')
+
+  modal.classList.add('active')
+  document.body.style.overflow = 'hidden'
+
+    // ✅ BẮT BUỘC PHẢI CÓ
+  requestAnimationFrame(() => {
+    initGallerySlider(modal)
+  })
+
+  // Reset scroll về đầu
+  if (scrollable?.scrollTo) {
+    scrollable.scrollTo({ left: 0, top: 0 })
+  }
+
+  const sidebar = document.getElementById('sidebar')
+
+  // Ẩn sidebar desktop
+  if (window.innerWidth >= 768 && sidebar) {
+    sidebarDisplayBackup = sidebar.style.display
+    sidebar.style.display = 'none'
+    sidebar.style.opacity = '0'
+  }
+
+  // Ẩn hamburger (kể cả khi đang ở desktop hay mobile)
+  updateHamburgerState()
+
+    // 🔁 Restart YouTube video khi mở modal
+  if (galleryYouTubeMap[id]) {
+    const { iframeId, src } = galleryYouTubeMap[id]
+    const iframe = document.getElementById(iframeId)
+    if (iframe) {
+      iframe.src = ''
+      iframe.src = src
+    }
+  }
+}
+
+// Close gallery modal
+function closeGalleryModal(id) {
+  const modal = document.getElementById(id)
+  modal.classList.remove('active')
+  document.body.style.overflow = ''
+
+  const sidebar = document.getElementById('sidebar')
+
+  // Hiện lại sidebar desktop
+  if (window.innerWidth >= 768 && sidebar) {
+    sidebar.style.display = sidebarDisplayBackup || ''
+    sidebar.style.opacity = '1'
+  }
+
+  // Cập nhật lại trạng thái hamburger
+  updateHamburgerState()
+
+    // ⛔ Stop YouTube video khi đóng modal
+  if (galleryYouTubeMap[id]) {
+    const iframe = document.getElementById(galleryYouTubeMap[id].iframeId)
+    if (iframe) iframe.src = ''
+  }
+
+}
+
+
+// BẮT SỰ KIỆN RESIZE – Fix lỗi desktop → mobile
+window.addEventListener('resize', function () {
+  const sidebar = document.getElementById('sidebar')
+
+  // Nếu đang có gallery mở
+  const activeGallery = document.querySelector('.gallery-modal.active')
+
+  if (activeGallery) {
+    // Đảm bảo hamburger luôn bị ẩn
+    updateHamburgerState()
+
+    // Nếu chuyển sang desktop, vẫn giữ sidebar ẩn
+    if (window.innerWidth >= 768 && sidebar) {
+      sidebar.style.display = 'none'
+      sidebar.style.opacity = '0'
+    }
+  }
+})
+
+// ESC key để thoát gallery/lightbox
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    // Close all gallery modals
+    document.querySelectorAll('.gallery-modal.active').forEach(modal => {
+      closeGalleryModal(modal.id)
+    })
+
+    // Close lightbox nếu có
+    if (typeof closeLightbox === 'function') {
+      closeLightbox()
+    }
+  }
+})
+
+// Drag-scroll ngang cho gallery (chỉ áp dụng cho .scroll-x)
+document.querySelectorAll('.scroll-x').forEach(container => {
+  let isDown = false
+  let startX
+  let scrollLeft
+
+  container.addEventListener('mousedown', (e) => {
+    e.preventDefault()
+    isDown = true
+    startX = e.pageX - container.offsetLeft
+    scrollLeft = container.scrollLeft
+    container.classList.add('cursor-grabbing')
+  })
+
+  container.addEventListener('mouseleave', () => {
+    isDown = false
+    container.classList.remove('cursor-grabbing')
+  })
+
+  container.addEventListener('mouseup', () => {
+    isDown = false
+    container.classList.remove('cursor-grabbing')
+  })
+
+  container.addEventListener('mousemove', (e) => {
+    if (!isDown) return
+    e.preventDefault()
+    const x = e.pageX - container.offsetLeft
+    const walk = (x - startX) * 1.5
+    container.scrollLeft = scrollLeft - walk
+  })
+
+  container.classList.add('cursor-grab')
+})
+
+// Khi load trang xong, đồng bộ trạng thái hamburger
+document.addEventListener('DOMContentLoaded', updateHamburgerState)
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+/* ===============================
+   PATCH: Swiper cho Gallery Modal
+================================ */
+
+let gallerySwiper = null
+
+// Hook vào gallery modal đang active
+function initGallerySlider(modal) {
+  const swiperEl = modal.querySelector('.swiper')
+  if (!swiperEl) return
+
+  // Chỉ init 1 lần
+  if (!gallerySwiper) {
+    gallerySwiper = new Swiper(swiperEl, {
+      loop: true,
+      navigation: {
+        nextEl: modal.querySelector('.swiper-button-next'),
+        prevEl: modal.querySelector('.swiper-button-prev'),
+      },
+      pagination: {
+        el: modal.querySelector('.swiper-pagination'),
+        clickable: true,
+      },
+      keyboard: {
+        enabled: true,
+      },
+    })
+  } else {
+    gallerySwiper.update()
+  }
+}
+</script>
+
+
+</body>
+</html>
