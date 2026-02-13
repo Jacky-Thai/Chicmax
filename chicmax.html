@@ -619,13 +619,53 @@
   </div>
 </div>
 
+<!-- CARD IMAGE SIS (VERTICAL SCROLL GALLERY) -->
+<div 
+  class="card relative group project-card overflow-hidden rounded-xl"
+  data-aos="fade-up"
+  data-aos-offset="80"
+  data-aos-delay="800"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="Campaign"
+>
+
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-cardsis">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Project Image -->
+  <img 
+    src="./Image/THUMB-SIS.webp"
+    alt="Campaign Project SIS"
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300 cursor-pointer"
+    onload="handleImageLoaded(this, 'spinner-cardsis')"
+    onclick="openGalleryModal('cardsis-gallery')"
+    data-spinner="spinner-cardsis"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      Campaign
+    </p>
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">January</span>
+    </div>
+  </div>
+
+</div>
 
 <!-- CARD IMAGE 7 -->
 <div 
   class="card relative group project-card" 
   data-aos="fade-up"
   data-aos-offset="80"
-  data-aos-delay="600"
+  data-aos-delay="1100"
   data-aos-duration="800"
   data-aos-easing="ease-in-out"
   data-aos-once="true"
@@ -666,7 +706,7 @@
   class="card relative group project-card" 
   data-aos="fade-up"
   data-aos-offset="80"
-  data-aos-delay="700"
+  data-aos-delay="800"
   data-aos-duration="800"
   data-aos-easing="ease-in-out"
   data-aos-once="true"
@@ -748,7 +788,7 @@
   class="card relative group project-card" 
   data-aos="fade-up"
   data-aos-offset="80"
-  data-aos-delay="1100"
+  data-aos-delay="900"
   data-aos-duration="800"
   data-aos-easing="ease-in-out"
   data-aos-once="true"
@@ -789,7 +829,7 @@
   class="card relative group project-card" 
   data-aos="fade-up"
   data-aos-offset="80"
-  data-aos-delay="600"
+  data-aos-delay="1000"
   data-aos-duration="800"
   data-aos-easing="ease-in-out"
   data-aos-once="true"
@@ -1148,6 +1188,55 @@ class="
   </div>
 
 </div>
+
+<!-- CARDSIS GALLERY (VERTICAL SCROLL) -->
+<div
+  id="cardsis-gallery"
+  class="gallery-modal fixed inset-0 bg-black z-[9999] hidden flex flex-col"
+>
+
+  <!-- CLOSE -->
+<button
+  onclick="closeGalleryModal('card6-gallery')"
+  class="
+    fixed top-6 left-6 w-full h-12
+    flex items-center pl-4
+    bg-black text-white text-3xl font-bold
+    hover:text-gray-500 transition
+    z-[9999]
+
+    md:absolute md:top-4 md:left-4
+    md:w-auto md:h-auto
+    md:bg-transparent md:text-4xl
+  "
+>
+  &times;
+</button>
+
+  <!-- SCROLL CONTAINER -->
+<div class="flex-1 overflow-y-auto px-4 pt-10 pb-20 
+            [-ms-overflow-style:none] 
+            [scrollbar-width:none] 
+            [&::-webkit-scrollbar]:hidden">
+
+    <div class="max-w-[900px] mx-auto flex flex-col gap-6">
+
+      <img src="./Image/SIS-1.webp" class="w-full rounded-xl" />
+      <img src="./Image/KV.webp" class="w-full rounded-xl" />
+      <img src="./Image/SIS-2.webp" class="w-full rounded-xl" />
+      <img src="./Image/SIS-3.webp" class="w-full rounded-xl" />
+      <img src="./Image/SIS-4.webp" class="w-full rounded-xl" />
+      <img src="./Image/SIS-5.webp" class="w-full rounded-xl" />
+      <img src="./Image/SIS-6.webp" class="w-full rounded-xl" />
+      <img src="./Image/SIS-7.webp" class="w-full rounded-xl" />
+      <img src="./Image/SIS-8.webp" class="w-full rounded-xl" />
+      <img src="./Image/BG-V-DAY.webp" class="w-full rounded-xl" />
+    </div>
+  </div>
+
+</div>
+
+
 
 <!-- CARD 7 GALLERY (VIDEO) -->
 <div
