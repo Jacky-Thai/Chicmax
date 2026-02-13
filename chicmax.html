@@ -1190,37 +1190,43 @@ class="
 </div>
 
 <!-- CARDSIS GALLERY (VERTICAL SCROLL) -->
-<div
-  id="cardsis-gallery"
-  class="gallery-modal fixed inset-0 bg-black z-[9999] hidden flex flex-col"
->
+<div id="cardsis-gallery" class="gallery-modal">
 
   <!-- CLOSE -->
-<button
-  onclick="closeGalleryModal('cardsis-gallery')"
-  class="
-    fixed top-6 left-6 w-full h-12
-    flex items-center pl-4
-    bg-black text-white text-3xl font-bold
-    hover:text-gray-500 transition
-    z-[9999]
+  <button
+    onclick="closeGalleryModal('cardsis-gallery')"
+    class="
+      sticky top-0 left-0
+      w-full h-14
+      flex items-center pl-4
+      bg-black
+      text-white text-3xl font-bold
+      hover:text-gray-400 transition
+      z-[50]
+    "
+  >
+    &times;
+  </button>
 
-    md:absolute md:top-4 md:left-4
-    md:w-auto md:h-auto
-    md:bg-transparent md:text-4xl
-  "
->
-  &times;
-</button>
+  <!-- CONTENT -->
+<div class="
+  scroll-x
+  w-full h-full
+  flex flex-col
+  gap-6
+  px-4
+  pt-5 pb-10
+  overflow-y-auto
+  cursor-grab
 
-  <!-- SCROLL CONTAINER -->
-<div class="flex-1 overflow-y-auto px-4 pt-10 pb-20 
-            [-ms-overflow-style:none] 
-            [scrollbar-width:none] 
-            [&::-webkit-scrollbar]:hidden">
+      [-webkit-overflow-scrolling:touch]
+      [-ms-overflow-style:none]
+      [scrollbar-width:none]
+      [&::-webkit-scrollbar]:hidden
+    "
+  >
 
     <div class="max-w-[900px] mx-auto flex flex-col gap-6">
-
       <img src="./Image/SIS-1.webp" class="w-full rounded-xl" />
       <img src="./Image/KV.webp" class="w-full rounded-xl" />
       <img src="./Image/SIS-2.webp" class="w-full rounded-xl" />
@@ -1232,8 +1238,8 @@ class="
       <img src="./Image/SIS-8.webp" class="w-full rounded-xl" />
       <img src="./Image/BG-V-DAY.webp" class="w-full rounded-xl" />
     </div>
-  </div>
 
+  </div>
 </div>
 
 
