@@ -279,6 +279,15 @@
   opacity: 1;
 }
 
+/* Hide scrollbar but still allow scrolling */
+#lightbox-images::-webkit-scrollbar {
+  display: none;
+}
+
+#lightbox-images {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
   </style>
 </head>
 
@@ -358,8 +367,8 @@
         PDP
         <span class="underline-bar absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-[50%]"></span>
       </button>
-      <button class="category-btn group relative px-6 py-2 font-sans font-bold text-lg hover:text-gray-400 transition-colors" data-category="Internal Event">
-        Internal Event
+      <button class="category-btn group relative px-6 py-2 font-sans font-bold text-lg hover:text-gray-400 transition-colors" data-category="POSM">
+        POSM
         <span class="underline-bar absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-[50%]"></span>
       </button>
     </section>
@@ -377,7 +386,7 @@
   data-aos-duration="800"
   data-aos-easing="ease-in-out"
   data-aos-once="true"
-  data-category="Internal Event"
+  data-category="POSM"
 >
 
   <!-- Spinner Overlay -->
@@ -409,6 +418,135 @@
     <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
       <span class="text-xs sm:text-sm lg:text-base">Printing Design</span>
     </div>
+  </div>
+</div>
+
+<!-- CARD IMAGE POSM STANDEE 1 -->
+<div 
+  class="card relative group project-card" 
+  data-aos="fade-up"
+  data-aos-offset="200"
+  data-aos-delay="200"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="POSM"
+>
+
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-posm-1">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Project Image -->
+  <img 
+    src="./Image/Standee 1.webp" 
+    alt="POSM Project" 
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300" 
+    onload="handleImageLoaded(this, 'spinner-posm-1')" 
+    onclick="openLightbox(['./Image/FA-Standee 1.webp'])"
+    data-spinner="spinner-posm-1"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      POSM
+    </p>
+    
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">Printing Design</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- CARD IMAGE POSM STANDEE 2 -->
+<div 
+  class="card relative group project-card" 
+  data-aos="fade-up"
+  data-aos-offset="200"
+  data-aos-delay="300"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="POSM"
+>
+
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-posm-2">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Project Image -->
+  <img 
+    src="./Image/Standee 2.webp" 
+    alt="POSM Standee 2" 
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300" 
+    onload="handleImageLoaded(this, 'spinner-posm-2')" 
+    onclick="openLightbox(['./Image/FA-Standee 2.webp'])"
+    data-spinner="spinner-posm-2"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      POSM
+    </p>
+    
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">Printing Design</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- CARD IMAGE POSM LED-SAM -->
+<div 
+  class="card relative group project-card" 
+  data-aos="fade-up"
+  data-aos-offset="200"
+  data-aos-delay="400"
+  data-aos-duration="800"
+  data-aos-easing="ease-in-out"
+  data-aos-once="true"
+  data-category="POSM"
+>
+
+  <!-- Spinner Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black z-10" id="spinner-posm-3">
+    <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center bg-black">
+      <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+    </div>
+  </div>
+
+  <!-- Project Image -->
+  <img 
+    src="./Image/LED-SAM.webp" 
+    alt="POSM Standee 3" 
+    class="w-full h-auto rounded-xl opacity-0 transition-opacity duration-300" 
+    onload="handleImageLoaded(this, 'spinner-posm-3')" 
+    onclick="openLightbox(['./Image/FA-LED SAM.webp'])"
+    data-spinner="spinner-posm-3"
+  />
+
+  <!-- Hover Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none rounded-xl px-4">
+    
+    <p class="text-white text-center mb-2 text-base sm:text-lg lg:text-xl transform transition-transform duration-300 group-hover:scale-110">
+      POSM
+    </p>
+    
+    <div class="bg-white/50 rounded-full px-2 sm:px-3 py-0.5">
+      <span class="text-xs sm:text-sm lg:text-base">Printing Design</span>
+    </div>
+
   </div>
 </div>
 
@@ -950,7 +1088,8 @@
      class="
        content-scroll
        flex flex-col md:flex-row gap-4
-       justify-start items-center w-full
+       justify-center items-center
+       w-full
 
        h-[calc(100vh-64px)]
        mt-16
@@ -962,6 +1101,53 @@
           <!-- images sẽ được JS thêm vào đây -->
 
     </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX POSM -->
+<div id="lightbox-posm" class="lightbox z-50">
+
+  <!-- CLOSE BUTTON -->
+  <button onclick="closeLightboxPOSM()"
+    class="
+      fixed top-6 left-6 w-full h-12
+      flex items-center pl-4
+      bg-black text-white text-3xl font-bold
+      hover:text-gray-500 transition
+      z-[9999]
+
+      md:absolute md:top-4 md:left-4
+      md:w-auto md:h-auto md:bg-transparent md:text-4xl
+    ">
+    &times;
+  </button>
+
+  <!-- CONTENT WRAPPER -->
+  <div class="flex-1 flex items-start justify-center pt-16 md:pt-16 px-4 pb-6">
+
+    <!-- Spinner -->
+    <div class="absolute inset-0 flex items-center justify-center bg-black z-20" id="lightbox-spinner-posm">
+      <div class="w-14 h-14 rounded-full border-t-4 border-white border-opacity-30 animate-spin flex items-center justify-center">
+        <img src="./Image/favicon2.webp" class="w-6 h-6 object-contain" />
+      </div>
+    </div>
+
+    <!-- IMAGE CONTAINER -->
+    <div id="lightbox-images-posm"
+         class="
+           content-scroll
+           flex flex-col md:flex-row gap-4
+           justify-start items-center w-full
+
+           h-[calc(100vh-64px)]
+           mt-16
+           overflow-y-auto
+
+           md:h-auto md:mt-0 md:overflow-visible
+         ">
+      <!-- images sẽ được JS thêm vào -->
+    </div>
+
   </div>
 </div>
 
